@@ -16,9 +16,9 @@ Plugin 'VundleVim/Vundle.vim'
 " File Finder
 "Plugin 'embear/vim-localvimrc'
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } "Fuzy Finder
-Plugin 'junegunn/fzf.vim' "Fuzy Finder
 Plugin 'preservim/nerdtree' "Filesystem Explorer
 Plugin 'airblade/vim-rooter'
+"Plugin 'github/copilot.vim'
 
 " Text, easier navigation and editing
 Plugin 'sbdchd/neoformat'
@@ -26,23 +26,31 @@ Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
 Plugin 'tpope/vim-sensible'
-Plugin 'justinmk/vim-sneak' "Jump to any location
+"Plugin 'justinmk/vim-sneak' "Jump to any location
 Plugin 'airblade/vim-gitgutter' "Show diffs
+
 "Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-commentary'
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'suan/vim-instant-markdown' " markdown preview: opens browser with live reload when vim opens .md
+Plugin 'preservim/vim-markdown'
+"Plugin 'suan/vim-instant-markdown' " markdown preview: opens browser with live reload when vim opens .md
 Plugin 'sjl/gundo.vim' " visual undo list
 Plugin 'SuperTab'
 Plugin 'digitaltoad/vim-pug'
 Plugin 'mg979/vim-visual-multi' "select words ^n - [/] to select next/previous
+Plugin 'jiangmiao/auto-pairs'
 
 " Syntax higlighting & templating
 Plugin 'sheerun/vim-polyglot'
 Plugin 'godlygeek/tabular'
 
 " Appearance
-" Plugin 'joshdick/onedark.vim'
+"Plugin 'joshdick/onedark.vim'
 Plugin 'sainnhe/sonokai'
+Plugin 'mhartington/oceanic-next'
+Plugin 'fatih/molokai'
+"Plugin 'morhetz/gruvbox'
+"Plugin 'kyoz/purify', { 'rtp': 'vim' }
 
 " Tags & coding related
 Plugin 'tpope/vim-fugitive' "Git Plugin
@@ -54,6 +62,8 @@ Plugin 'node.js'
 Plugin 'scrooloose/syntastic'
 Plugin 'elzr/vim-json'
 Plugin 'posva/vim-vue'
+Plugin 'beautify-web/js-beautify'
+"Plugin 'mattn/emmet-vim' "html 
 
 " Others
 Plugin 'mbbill/undotree'
@@ -79,9 +89,14 @@ filetype plugin indent on    " required
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Important!!
 syntax on
+syntax enable
 
 " Set vim for 256 color schemes
 set t_Co=256
+
+if (has("termguicolors"))
+  set termguicolors
+ endif
 
 if has('mouse')
     set mouse=a
@@ -97,8 +112,14 @@ else
 endif
 
 " Colorscheme
-let g:sonokai_style = 'atlantis'
-colo sonokai 
+"let g:sonokai_style = 'atlantis'
+"colorscheme sonokai 
+"colorscheme OceanicNext
+colorscheme molokai
+"let g:onedark_style = 'warmer'
+"colorscheme onedark
+"colorscheme gruvbox
+"colorscheme purify
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " General
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -148,7 +169,8 @@ set wildmode=list:longest " turn on wild menu in special format (long format)
 set wildignore=*.dll,*.o,*.obj,*.bak,*.exe,*.pyc,*.swp,*.jpg,*.gif,*.png " ignore formats
 set ruler " Always show current positions along the bottom
 set cmdheight=1 " the command bar is 1 high
-set number " turn on line numbers
+" set number " turn on line numbers
+set number relativenumber " turn on relative line numbers
 set lz " do not redraw while running macros (much faster) (LazyRedraw)
 set hid " you can change buffer without saving
 set backspace=2 " make backspace work normal
@@ -298,7 +320,7 @@ noremap <leader>yy "*Y
 " Preserve indentation while pasting text from the macOS clipboard
 noremap <leader>p :set paste<CR>:put  *<CR>:set nopaste<CR>
 
-" Move cursor betwee panes
+" Move cursor between panes
 nnoremap <leader>h :wincmd h<CR>
 nnoremap <leader>j :wincmd j<CR>
 nnoremap <leader>k :wincmd k<CR>
@@ -308,10 +330,26 @@ nnoremap <leader>l :wincmd l<CR>
 nnoremap <leader>i :m-2<CR>
 nnoremap <leader>m :m+1<CR>
 
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
+
 " Resize current pane
-nnoremap <leader>po :vertical resize 45<CR>
 
+nnoremap <leader>po :vertical resize 30<CR>
+nnoremap <Leader>+ :vertical resize +5<CR>
+nnoremap <Leader>- :vertical resize -5<CR>
 
+" Gitgutter
+nnoremap <leader>] :GitGutterNextHunk<CR>
+nnoremap <leader>[ :GitGutterPrevHunk<CR>
+let g:gitgutter_enabled = 1
+let g:gitgutter_map_keys = 0
+
+" Tabular
+if exists(":Tabularize")
+    nmap <leader>a= :Tabularize /=<CR>
+    nmap <leader>a: :Tabularize /:\zs<CR>
+endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " NERDTree
@@ -319,14 +357,15 @@ nnoremap <leader>po :vertical resize 45<CR>
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.DS_Store$']
 " auto open if no file sent as arg
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Toggle NERDtree with C-n
-map ,n <plug>NERDTreeTabsToggle<CR>
+let g:NERDTreeWinSize=30
+nnoremap <leader>, :NERDTreeTabsToggle<CR>
+
 " Autoclose if only NERDtree is left
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " netrw (default installed alt for NERDTree)
 " more info: https://shapeshed.com/vim-netrw/
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -336,10 +375,10 @@ let g:netrw_liststyle = 3 " tre style directory listing
 let g:netrw_browse_split = 4 " open file in previous window
 let g:netrw_altv = 1
 let g:netrw_winsize = 25 " width of dir explorer
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :Vexplore
-augroup END
+" augroup ProjectDrawer
+"  autocmd!
+"  autocmd VimEnter * :Vexplore
+" augroup END
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Syntastic
