@@ -17,4 +17,4 @@
 ```bash
   mv .vimrc ~
 ```
-- Run `:PluginInstall` command in vim.
+- Run `:PlugInstall` command in vim.
