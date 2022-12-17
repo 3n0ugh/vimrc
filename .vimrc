@@ -5,47 +5,24 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'AndrewRadev/splitjoin.vim'
 Plug 'ConradIrwin/vim-bracketed-paste'
-Plug 'SirVer/ultisnips'
-Plug 'arthurxavierx/vim-caser'
-Plug 'cespare/vim-toml'
 Plug 'corylanou/vim-present', {'for' : 'present'}
 Plug 'ekalinin/Dockerfile.vim', {'for' : 'Dockerfile'}
 Plug 'elzr/vim-json', {'for' : 'json'}
 Plug 'ervandew/supertab'
 Plug 'gruvbox-community/gruvbox'
-Plug 'edkolev/tmuxline.vim'
 Plug 'vim-airline/vim-airline'
 Plug 'fatih/vim-go'
-Plug 'fatih/vim-hclfmt'
-Plug 'fatih/vim-nginx' , {'for' : 'nginx'}
 Plug 'godlygeek/tabular'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
-Plug 'mileszs/ack.vim'
 Plug 'plasticboy/vim-markdown'
-Plug 'roxma/vim-tmux-clipboard'
 Plug 'scrooloose/nerdtree'
-Plug 't9md/vim-choosewin'
-Plug 'tmux-plugins/vim-tmux', {'for': 'tmux'}
-Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-commentary'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-scriptease'
-Plug 'tpope/vim-rails'
-Plug 'tpope/vim-rhubarb'
-Plug 'tpope/vim-surround'
-Plug 'vim-ruby/vim-ruby'
-Plug 'tyru/open-browser.vim'
-Plug 'dag/vim-fish'
 Plug 'ycm-core/YouCompleteMe'
-Plug 'turbio/bracey.vim', {'do': 'npm install --prefix server'}
 Plug 'mattn/emmet-vim'
-Plug 'mhartington/oceanic-next'
-Plug 'EdenEast/nightfox.nvim'
 Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
 
 call plug#end()
 
@@ -73,7 +50,7 @@ set hlsearch                    " Highlight found searches
 set mouse=a                     "Enable mouse mode
 
 set noerrorbells             " No beeps
-set number                   " Show line numbers
+set relativenumber           " Show line numbers
 set showcmd                  " Show me what I'm typing
 set noswapfile               " Don't use swapfile
 set nobackup                 " Don't create annoying backup files
@@ -132,7 +109,7 @@ function! ChangeBackground()
     set background=light  " for light version of theme
   endif
 
-  colorscheme nightfox
+  colorscheme gruvbox
   try
     execute "AirlineRefresh"
   catch
@@ -146,10 +123,6 @@ augroup filetypedetect
   command! -nargs=* -complete=help Help vertical belowright help <args>
   autocmd FileType help wincmd L
   
-  autocmd BufNewFile,BufRead .tmux.conf*,tmux.conf* setf tmux
-  autocmd BufNewFile,BufRead .nginx.conf*,nginx.conf* setf nginx
-  autocmd BufNewFile,BufRead *.hcl setf conf
-
   autocmd BufRead,BufNewFile *.gotmpl set filetype=gotexttmpl
   
   autocmd BufNewFile,BufRead *.ino setlocal noet ts=2 sw=2 sts=2
@@ -170,19 +143,6 @@ augroup filetypedetect
 augroup END
 
 "=====================================================
-"===================== STATUSLINE ====================
-
-let g:tmuxline_preset = {
-      \'a'    : '#S',
-      \'win'  : '#I #W',
-      \'cwin' : '#I #W',
-      \'x'    : '%a',
-      \'y'    : '%Y-%m-%d %H:%M',
-      \'z'    : ' #h',
-      \'options' : {'status-justify' : 'left', 'status-position' : 'top'}}
-
-let g:tmuxline_powerline_separators = 0
-
 "=====================================================
 "===================== MAPPINGS ======================
 
@@ -190,11 +150,6 @@ let g:tmuxline_powerline_separators = 0
 " With a map leader it's possible to do extra key combinations
 " i.e: <leader>w saves the current file
 let mapleader = ","
-
-" Some useful quickfix shortcuts for quickfix
-map <C-n> :cn<CR>
-map <C-m> :cp<CR>
-nnoremap <leader>a :cclose<CR>
 
 " put quickfix window always to the bottom
 augroup quickfix
@@ -220,7 +175,6 @@ nnoremap <space> zz
 " nnoremap <leader><space> :nohlsearch<CR>
 function! s:clear_highlight()
   let @/ = ""
-  call go#guru#ClearSameIds()
 endfunction
 nnoremap <silent> <leader><space> :<C-u>call <SID>clear_highlight()<CR>
 
@@ -269,10 +223,6 @@ if has('terminal')
   tnoremap <leader>tv <C-w>:vsplit<cr>:term ++curwin<CR>
   tnoremap <leader>ts <C-w>:split<cr>:term ++curwin<CR>
   tnoremap <leader>tt <C-w>:tabnew<cr>:term ++curwin<CR>
-
-  " always start terminal in insert mode when I switch to it
-  " NOTE(arslan): startinsert doesn't work in Terminal-normal mode.
-  " autocmd WinEnter * if &buftype == 'terminal' | call feedkeys("i") | endif
 endif
 
 " Visual linewise up and down by default (and use gj gk to go quicker)
@@ -307,6 +257,7 @@ nnoremap Y y$
 
 " Do not show stupid q: window
 map q: :q
+map Q: :q
 map Wq: :wq
 map WQ: :wq
 
@@ -354,15 +305,6 @@ nnoremap <leader>ui :<C-u>call <SID>create_go_doc_comment()<CR>
 
 "===================== PLUGINS ======================
 
-
-" ==================== open-browser ====================
-
-" default netrw is not working anymore, switch to a custom plugin
-" (open-browser.vim)  https://github.com/vim/vim/issues/4738
-let g:netrw_nogx = 1 " disable netrw's gx mapping.
-nmap gx <Plug>(openbrowser-smart-search)
-vmap gx <Plug>(openbrowser-smart-search)
-
 " ==================== Fugitive ====================
 vnoremap <leader>gb :Git blame<CR>
 nnoremap <leader>gb :Git blame<CR>
@@ -390,6 +332,11 @@ let g:go_doc_balloon = 1
 let g:go_imports_mode="gopls"
 let g:go_imports_autosave=1
 
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_operators = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_operators = 1
 
@@ -412,22 +359,8 @@ endfunction
 
 augroup go
   autocmd!
-
-  autocmd FileType go nmap <silent> <Leader>v <Plug>(go-def-vertical)
-  autocmd FileType go nmap <silent> <Leader>s <Plug>(go-def-split)
-  autocmd FileType go nmap <silent> <Leader>d <Plug>(go-def-tab)
-
   autocmd FileType go nmap <silent> <Leader>i <Plug>(go-doc)
-
-  autocmd FileType go nmap <silent> <leader>b :<C-u>call <SID>build_go_files()<CR>
-  autocmd FileType go nmap <silent> <leader>t  <Plug>(go-test)
-  autocmd FileType go nmap <silent> <Leader>c <Plug>(go-coverage-toggle)
-
-  " I like these more!
-  autocmd Filetype go command! -bang A call go#alternate#Switch(<bang>0, 'edit')
-  autocmd Filetype go command! -bang AV call go#alternate#Switch(<bang>0, 'vsplit')
-  autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
-  autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
+  autocmd FileType go nmap <silent> <leader>t <Plug>(go-test)
 augroup END
 
 
@@ -460,8 +393,16 @@ command! -bang -nargs=* F call fzf#vim#grep(g:rg_command .shellescape(<q-args>),
 
 " ==================== NerdTree ====================
 " For toggling
-noremap <Leader>n :NERDTreeToggle<cr>
+" noremap <Leader>n :NERDTreeToggle<cr>
 noremap <Leader>f :NERDTreeFind<cr>
+map <Leader>n :call NERDTreeToggleAndRefresh()<CR>
+
+function NERDTreeToggleAndRefresh()
+  :NERDTreeToggle
+  if g:NERDTree.IsOpen()
+    :NERDTreeRefreshRoot
+  endif
+endfunction
 
 let NERDTreeShowHidden=1
 
@@ -477,51 +418,6 @@ let g:vim_markdown_toml_frontmatter = 1
 let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_new_list_item_indent = 2
 let g:vim_markdown_no_extensions_in_markdown = 1
-
-function! s:create_front_matter()
-  let fm = ["+++"]
-  call add(fm, printf("date = \"%s\"", strftime("%Y-%m-%d %X")))
-
-  let filename = expand("%:r")
-  let tl = split(filename, "-")
-  " in case the file is in form of foo.md instead of
-  " year-month-day-foo.markdown
-  if !empty(str2nr(tl[0])) 
-    let tl = split(filename, "-")[3:]
-  endif
-
-  let title = join(tl, " ")
-  let title = toupper(title[0]) . title[1:]
-  call add(fm, printf("title = \"%s\"", title))
-
-  let slug = join(tl, "-")
-  call add(fm, printf("slug = \"%s\"", slug))
-  call add(fm, printf("url = \"%s/%s/\"", strftime("%Y/%m/%d"), slug))
-
-  call add(fm, 'featured_image = ""')
-  call add(fm, 'description = ""')
-  call add(fm, "+++")
-  call append(0, fm)
-endfunction
-
-" create a shortcode that inserts an image holder with caption or class
-" attribute that defines on how to set the layout.
-function! s:create_figure()
-  let fig = ["{{< figure"]
-  call add(fig, 'src="/images/image.jpg"')
-  call add(fig, 'class="left"')
-  call add(fig, 'caption="This looks good!"')
-  call add(fig, ">}}")
-
-  let res = [join(fig, " ")]
-  call append(line("."), res)
-endfunction
-
-augroup md
-  autocmd!
-  autocmd Filetype markdown command! -bang HugoFrontMatter call <SID>create_front_matter()
-  autocmd Filetype markdown command! -bang HugoFig call <SID>create_figure()
-augroup END
 
 " ==================== vim-json ====================
 let g:vim_json_syntax_conceal = 0
@@ -543,3 +439,15 @@ nmap  -  <Plug>(choosewin)
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " vim: sw=2 sw=2 et
+
+" ==================== Kitty ====================
+" General colors
+if has('gui_running') || has('vim') 
+    hi Normal 		guifg=#f6f3e8 guibg=#242424 
+else
+    " Set the terminal default background and foreground colors, thereby
+    " improving performance by not needing to set these colors on empty cells.
+    hi Normal guifg=NONE guibg=NONE ctermfg=NONE ctermbg=NONE
+    let &t_ti = &t_ti . "\033]10;#f6f3e8\007\033]11;#242424\007"
+    let &t_te = &t_te . "\033]110\007\033]111\007"
+endif
