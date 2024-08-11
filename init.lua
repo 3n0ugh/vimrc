@@ -271,7 +271,7 @@ require("lazy").setup(
             },
             auto_attach                  = true,
             attach_to_untracked          = false,
-            current_line_blame           = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
+            current_line_blame           = true, -- Toggle with `:Gitsigns toggle_current_line_blame`
             current_line_blame_opts      = {
               virt_text = true,
               virt_text_pos = 'eol', -- 'eol' | 'overlay' | 'right_align'
@@ -305,6 +305,10 @@ require("lazy").setup(
           require("nvim-tree").setup(
             {
               sort_by = "case_sensitive",
+              view = {
+                side = "right",
+                width = 40
+              },
               filters = {
                 dotfiles = true
               },
@@ -597,11 +601,6 @@ vim.g.mapleader = ","
 vim.keymap.set("n", "<Leader>w", ":write!<CR>")
 vim.keymap.set("n", "<Leader>q", ":q!<CR>", { silent = true })
 
--- Some useful quickfix shortcuts for quickfix
-vim.keymap.set("n", "<C-n>", "<cmd>cnext<CR>zz")
-vim.keymap.set("n", "<C-m>", "<cmd>cprev<CR>zz")
-vim.keymap.set("n", "<leader>a", "<cmd>cclose<CR>")
-
 -- Exit on jj and jk
 vim.keymap.set("n", "j", "gj")
 vim.keymap.set("n", "k", "gk")
@@ -834,3 +833,8 @@ vim.api.nvim_create_autocmd('FileType', {
   group = qfgroup,
   command = 'setlocal wrap',
 })
+
+vim.api.nvim_create_user_command('CheatSheet', function()
+  local file_path = vim.fn.stdpath('data') .. '/cheat_sheet.txt'
+  vim.cmd('vs ' .. file_path)
+end, {})
