@@ -1,0 +1,107 @@
+
+=================================
+========== Cheat Sheet ==========
+=================================
+
+-> Git
+
+<,gb>   : Open file git blame.
+<,gl>   : Open line git blame.
+<,gr>   : Reset the current hunk.
+<,gj>   : Move to next hunk.
+<,gk>   : Move to previous hunk.
+
+
+-> Telescope (File Finder)
+
+<C-p>   : Show git files.
+<C-b>   : Find files.
+<C-g>   : Show LSP symbols (function, variable, method, etc...)
+<,td>   : Show diagnostics (error, warning, etc...)
+<,gs>   : Find string in files.
+<,gg>   : Find string in files (live).
+
+
+-> File Explorer
+
+<,n>    : Open file explorer.
+<s>     : Toggle collapse/expand folders (only in file explorer).
+<u>     : Show upper directory (only in file explorer).
+<a>     : Create file (only in file explorer).
+<r>     : Rename file (only in file explorer).
+<f>     : Filter files (only in file explorer).
+<c>     : Copy file under cursor (only in file explorer).
+<x>     : Cut file under cursor (only in file explorer).
+<p>     : Paste copied file (only in file explorer).
+<E>     : Expand all (only in file explorer).
+<W>     : Collapse all (only in file explorer).
+<C-]>   : Change root directory (only in file explorer).
+<C-k>   : Info (only in file explorer).
+
+
+-> Diagnostics
+
+<,do>   : Show diagnostics details of current line on floating window. 
+<,dp>   : Move to previous diagnostic.
+<,dn>   : Move to next diagnostic.
+<,ds>   : Show list of diagnostics.
+
+
+-> LSP
+
+<gd>    : Open lsp document.
+<,v>    : Open lsp document in vertical split.
+<,s>    : Open lsp document in horizontal split.
+<gr>    : Show references.
+<gi>    : Show implementations.
+<K>     : Hower description.
+<,rn>   : Rename.
+
+
+
+-> Vim Test
+
+<,tt>   : Run nearest test.
+<,tf>   : Run current test file.
+
+
+
+-> Edit Mode 
+
+<jj>    : Exit from edit mode.
+<jk>    : Exit from edit mode.
+
+
+-> Visual Mode
+
+<,<space>> : Remove search highlight.
+<*>        : Select and search word under the cursor.
+<,rw>      : Rename the word under the cursor.
+<Y>        : Yank line.
+<gx>       : Open in finder.
+
+
+-> Autocompletion
+
+<C-n>   : Scroll to next item in completion suggestions.
+<C-p>   : Scroll to previous item in completion suggestions.
+<C-d>   : Scroll docs to up fast (x4).
+<C-f>   : Scroll docs to down fast (x4).
+<Tab>   : Scroll to next item in completion suggestions.
+<S-Tab> : Scroll to prev item in completion suggestions.
+<CR>    : Select the suggestion on cursor.
+
+
+-> Pane Switch
+
+<C-j>      : Move cursor to below pane.
+<C-k>      : Move cursor to above pane.
+<C-l>      : Move cursor to right pane.
+<C-h>      : Move cursor to left pane.
+
+
+-> Terminal
+
+<,tv>      : Open terminal in vertical.
+<,ts>      : Open terminal in horizontal.
+
